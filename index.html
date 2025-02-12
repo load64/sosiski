@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Нажми на кнопку</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
+            overflow: hidden;
+        }
+        .button {
+            padding: 20px 50px;
+            font-size: 24px;
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.8);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: scale(1.1);
+        }
+        .hidden {
+            display: none;
+        }
+        .screamer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://gk-nhl.ru/upload/resize_cache/webp/iblock/b9e/f6nrm6zmnkuw7kyaxdzjse6iumjd4eky/sosiski-appetitnye.webp') center/cover no-repeat;
+            z-index: 9999;
+        }
+        .snow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="snow" id="snow"></canvas>
+    <button class="button" onclick="triggerScreamer()">Нажми меня</button>
+    <div class="screamer hidden" id="screamer"></div>
+    <audio id="scream" src="https://www.fesliyanstudios.com/play-mp3/4384" preload="auto"></audio>
+
+    <script>
+        function triggerScreamer() {
+            let screamer = document.getElementById('screamer');
+            screamer.classList.remove('hidden');
+            screamer.requestFullscreen();
+            let audio = document.getElementById('scream');
+            audio.play();
+        }
+        
+        // Анимация снега
+        const canvas = document.getElementById("snow");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        let flakes = [];
+        for (let i = 0; i < 100; i++) {
+            flakes.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 4 + 1,
+                speed: Math.random() * 2 + 1
+            });
+        }
+        
+        function drawSnow() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            flakes.forEach(flake => {
+                ctx.moveTo(flake.x, flake.y);
+                ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
+            });
+            ctx.fill();
+            moveSnow();
+        }
+        
+        function moveSnow() {
+            flakes.forEach(flake => {
+                flake.y += flake.speed;
+                if (flake.y > canvas.height) {
+                    flake.y = -flake.radius;
+                    flake.x = Math.random() * canvas.width;
+                }
+            });
+        }
+        
+        function updateSnow() {
+            drawSnow();
+            requestAnimationFrame(updateSnow);
+        }
+        updateSnow();
+    </script>
+</body>
+</html>
