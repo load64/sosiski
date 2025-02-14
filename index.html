@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Нажми на кнопку</title>
+    <title>Мини-игра</title>
     <style>
         body {
             display: flex;
@@ -12,23 +12,26 @@
             height: 100vh;
             background-color: black;
             overflow: hidden;
-        }
-        .button {
-            padding: 20px 50px;
-            font-size: 24px;
-            background: linear-gradient(45deg, #ff0000, #cc0000);
             color: white;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.8);
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .button:hover {
-            transform: scale(1.1);
+            font-family: Arial, sans-serif;
+            flex-direction: column;
         }
         .hidden {
             display: none;
+        }
+        .question {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .answer {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: red;
+            border: none;
+            color: white;
+            border-radius: 5px;
         }
         .screamer, .final-scare {
             position: fixed;
@@ -41,59 +44,44 @@
         .screamer {
             background: url('https://gk-nhl.ru/upload/resize_cache/webp/iblock/b9e/f6nrm6zmnkuw7kyaxdzjse6iumjd4eky/sosiski-appetitnye.webp') center/cover no-repeat;
         }
-        .black-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 32px;
-            font-family: Arial, sans-serif;
-            z-index: 10000;
-        }
         .final-scare {
             background: url('https://avatars.mds.yandex.net/i?id=1f0b9385ea3d4fb8b3dad778944ff89aa3897640-4265706-images-thumbs&n=13') center/cover no-repeat;
         }
     </style>
 </head>
 <body>
-    <button class="button" onclick="triggerScreamer()">Нажми меня</button>
+    <div id="game">
+        <div class="question">Сколько будет 2 + 2?</div>
+        <button class="answer" onclick="checkAnswer(true)">4</button>
+        <button class="answer" onclick="checkAnswer(false)">5</button>
+        <button class="answer" onclick="checkAnswer(false)">3</button>
+    </div>
+    
     <div class="screamer hidden" id="screamer"></div>
-    <div class="black-screen hidden" style="display: none;" id="blackScreen">Думаешь, я буду тебя пугать?</div>
     <div class="final-scare hidden" id="finalScare"></div>
+    
     <audio id="scream" src="https://www.fesliyanstudios.com/play-mp3/4384" preload="auto"></audio>
     <audio id="finalScream" src="https://www.myinstants.com/media/sounds/harold-screamer.mp3" preload="auto"></audio>
-
+    
     <script>
-        function triggerScreamer() {
-            let button = document.querySelector('.button');
-            let screamer = document.getElementById('screamer');
-            let blackScreen = document.getElementById('blackScreen');
-            let finalScare = document.getElementById('finalScare');
-            let screamAudio = document.getElementById('scream');
-            let finalScreamAudio = document.getElementById('finalScream');
-            
-            button.classList.add('hidden');  // Скрываем кнопку
-            screamer.classList.remove('hidden');
-            screamer.requestFullscreen();
-            screamAudio.play();
-            
-            setTimeout(() => {
-                screamAudio.pause();
-                screamer.classList.add('hidden');
-                blackScreen.classList.remove('hidden');
-            }, 3000);
-            
-            setTimeout(() => {
-                blackScreen.classList.add('hidden');
-                finalScare.classList.remove('hidden');
-                finalScreamAudio.play();
-            }, 6000);
+        function checkAnswer(isCorrect) {
+            if (isCorrect) {
+                alert("Молодец! Ты ответил правильно!");
+            } else {
+                let screamer = document.getElementById('screamer');
+                let finalScare = document.getElementById('finalScare');
+                let screamAudio = document.getElementById('scream');
+                let finalScreamAudio = document.getElementById('finalScream');
+                
+                screamer.classList.remove('hidden');
+                screamAudio.play();
+                
+                setTimeout(() => {
+                    screamer.classList.add('hidden');
+                    finalScare.classList.remove('hidden');
+                    finalScreamAudio.play();
+                }, 3000);
+            }
         }
     </script>
 </body>
